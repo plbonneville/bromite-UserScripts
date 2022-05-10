@@ -12,9 +12,30 @@
 (function() {
     'use strict';
     
-    var elements = document.querySelectorAll("[href^='https://www.reddit.com']");
+    const rewriteRedditUrls = function() {
+        const regex = /https:\/\/www\.reddit\.com/;
+        
+        const elements = document.querySelectorAll("[href^='https://www.reddit.com']");
+        elements.forEach(x => x.href = x.href.replace(regex, "https://old.reddit.com"));
+    }    
     
-    const regex = /https:\/\/www\.reddit\.com/;
+    const checkElementThenRun = function (selector, func) {
+        var el = document.querySelector(selector);
+        if ( el == null ) {
+            if (window.requestAnimationFrame != undefined) {
+                window.requestAnimationFrame(function(){ checkElementThenRun(selector, func)});
+            } else {
+                document.addEventListener('readystatechange', function(e) {
+                    if (document.readyState == 'complete') {
+                        func();
+                    }
+                });
+            }
+        } else {
+            func();
+        }
+    };
     
-    elements.forEach(x => x.href = x.href.replace(regex, "https://old.reddit.com"));
+    checkElementThenRun('body', rewriteRedditUrls);
+    
 })();
