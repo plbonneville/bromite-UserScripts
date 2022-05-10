@@ -36,6 +36,6 @@
         }
     };
     
-    checkElementThenRun('body', rewriteRedditUrls);
+    checkElementThenRun('#main', rewriteRedditUrls);
     
 })();
